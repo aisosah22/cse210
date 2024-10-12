@@ -1,193 +1,117 @@
 using System;
 using System.Collections.Generic;
 
-// Class representing a Product
-class Product
+// Class representing a Comment
+class Comment
 {
-    private string _name;
-    private string _productId;
-    private decimal _pricePerUnit;
-    private int _quantity;
+    private string _commenterName;
+    private string _commentText;
 
-    // Constructor for Product
-    public Product(string name, string productId, decimal pricePerUnit, int quantity)
+    // Constructor for Comment
+    public Comment(string commenterName, string commentText)
     {
-        _name = name;
-        _productId = productId;
-        _pricePerUnit = pricePerUnit;
-        _quantity = quantity;
+        _commenterName = commenterName;
+        _commentText = commentText;
     }
 
-    // Method to calculate the total cost of the product (price * quantity)
-    public decimal GetTotalCost()
+    // Method to get the commenter's name
+    public string GetCommenterName()
     {
-        return _pricePerUnit * _quantity;
+        return _commenterName;
     }
 
-    // Get the product name
-    public string GetName()
-    {
-        return _name;
-    }
 
-    // Get the product ID
-    public string GetProductId()
+    public string GetCommentText()
     {
-        return _productId;
+        return _commentText;
     }
 }
 
-// Class representing a Customer
-class Customer
+// Class representing a Video
+class Video
 {
-    private string _name;
-    private Address _address;
+    private string _title;
+    private string _author;
+    private int _lengthInSeconds;
+    private List<Comment> _comments;
 
-    // Constructor for Customer
-    public Customer(string name, Address address)
+    // Constructor for Video
+    public Video(string title, string author, int lengthInSeconds)
     {
-        _name = name;
-        _address = address;
+        _title = title;
+        _author = author;
+        _lengthInSeconds = lengthInSeconds;
+        _comments = new List<Comment>();
     }
 
-    // Get the customer name
-    public string GetName()
+    // Method to add a comment to the video
+    public void AddComment(Comment comment)
     {
-        return _name;
+        _comments.Add(comment);
     }
 
-    // Get the customer address (as a string)
-    public string GetAddressString()
+    // Method to get the number of comments on the video
+    public int GetNumberOfComments()
     {
-        return _address.GetAddressString();
+        return _comments.Count;
     }
 
-    // Check if the customer lives in the USA
-    public bool LivesInUSA()
+    // Method to display video information and its comments
+    public void DisplayVideoInfo()
     {
-        return _address.IsInUSA();
-    }
-}
+        Console.WriteLine($"Title: {_title}");
+        Console.WriteLine($"Author: {_author}");
+        Console.WriteLine($"Length: {_lengthInSeconds} seconds");
+        Console.WriteLine($"Number of Comments: {GetNumberOfComments()}");
+        Console.WriteLine("Comments:");
 
-// Class representing an Address
-class Address
-{
-    private string _streetAddress;
-    private string _city;
-    private string _state;
-    private string _country;
-
-    // Constructor for Address
-    public Address(string streetAddress, string city, string state, string country)
-    {
-        _streetAddress = streetAddress;
-        _city = city;
-        _state = state;
-        _country = country;
-    }
-
-    // Method to check if the address is in the USA
-    public bool IsInUSA()
-    {
-        return _country.ToLower() == "usa";
-    }
-
-    // Method to return the full address as a string
-    public string GetAddressString()
-    {
-        return $"{_streetAddress}\n{_city}, {_state}\n{_country}";
-    }
-}
-
-// Class representing an Order
-class Order
-{
-    private List<Product> _products;
-    private Customer _customer;
-
-    // Constructor for Order
-    public Order(Customer customer)
-    {
-        _products = new List<Product>();
-        _customer = customer;
-    }
-
-    // Add a product to the order
-    public void AddProduct(Product product)
-    {
-        _products.Add(product);
-    }
-
-    // Calculate the total cost of the order (sum of products + shipping cost)
-    public decimal GetTotalCost()
-    {
-        decimal total = 0;
-
-        // Add the total cost of all products
-        foreach (var product in _products)
+        foreach (Comment comment in _comments)
         {
-            total += product.GetTotalCost();
+            Console.WriteLine($"- {comment.GetCommenterName()}: {comment.GetCommentText()}");
         }
 
-        // Add shipping cost (5 USD for USA, 35 USD for other countries)
-        total += _customer.LivesInUSA() ? 5 : 35;
-
-        return total;
-    }
-
-    // Generate a packing label listing product names and IDs
-    public string GetPackingLabel()
-    {
-        string label = "Packing Label:\n";
-
-        foreach (var product in _products)
-        {
-            label += $"{product.GetName()} (ID: {product.GetProductId()})\n";
-        }
-
-        return label;
-    }
-
-    // Generate a shipping label with the customer's name and address
-    public string GetShippingLabel()
-    {
-        return $"Shipping Label:\n{_customer.GetName()}\n{_customer.GetAddressString()}";
+        Console.WriteLine();
     }
 }
 
-// Main program demonstrating the encapsulation principle
+// Main program demonstrating abstraction
 class Program
 {
     static void Main()
     {
-        // Create some products
-        Product product1 = new Product("Laptop", "LAP123", 1200m, 1);
-        Product product2 = new Product("Mouse", "MOU456", 20m, 2);
-        Product product3 = new Product("Keyboard", "KEY789", 50m, 1);
+        // Create 3-4 videos
+        Video video1 = new Video("C# Programming Tutorial", "John Doe", 600);
+        Video video2 = new Video("Introduction to Design Patterns", "Jane Smith", 1200);
+        Video video3 = new Video("Learn Algorithms with Python", "Alice Johnson", 1800);
+        Video video4 = new Video("Web Development with JavaScript", "Bob Williams", 900);
 
-        // Create addresses
-        Address address1 = new Address("123 Apple St", "New York", "NY", "USA");
-        Address address2 = new Address("456 Maple Rd", "Toronto", "ON", "Canada");
+        // Add comments to the first video
+        video1.AddComment(new Comment("Mike", "Great tutorial!"));
+        video1.AddComment(new Comment("Sarah", "Very helpful, thanks!"));
+        video1.AddComment(new Comment("Kevin", "Well explained, keep it up!"));
 
-        // Create customers
-        Customer customer1 = new Customer("John Doe", address1);
-        Customer customer2 = new Customer("Jane Smith", address2);
+        // Add comments to the second video
+        video2.AddComment(new Comment("Rachel", "This was a bit difficult to follow."));
+        video2.AddComment(new Comment("Tom", "I enjoyed the part on Singleton Pattern."));
+        video2.AddComment(new Comment("Linda", "Please make more videos on this topic!"));
 
-        // Create orders
-        Order order1 = new Order(customer1);
-        order1.AddProduct(product1);
-        order1.AddProduct(product2);
+        // Add comments to the third video
+        video3.AddComment(new Comment("Steve", "Fantastic explanation of algorithms!"));
+        video3.AddComment(new Comment("Emily", "Helped me understand sorting algorithms."));
+        video3.AddComment(new Comment("Patrick", "Looking forward to the next one!"));
 
-        Order order2 = new Order(customer2);
-        order2.AddProduct(product3);
+        // Add comments to the fourth video
+        video4.AddComment(new Comment("Jessica", "Clear and concise."));
+        video4.AddComment(new Comment("Chris", "Perfect for beginners."));
+        video4.AddComment(new Comment("Karen", "Could you cover more advanced topics in future videos?"));
 
-        // Display order details
-        Console.WriteLine(order1.GetPackingLabel());
-        Console.WriteLine(order1.GetShippingLabel());
-        Console.WriteLine($"Total Price: ${order1.GetTotalCost():F2}\n");
+        // Add videos to a list
+        List<Video> videoList = new List<Video> { video1, video2, video3, video4 };
 
-        Console.WriteLine(order2.GetPackingLabel());
-        Console.WriteLine(order2.GetShippingLabel());
-        Console.WriteLine($"Total Price: ${order2.GetTotalCost():F2}");
+        // Iterate through the list of videos and display their information
+        foreach (var video in videoList)
+        {
+            video.DisplayVideoInfo();
+        }
     }
 }
